@@ -18,11 +18,12 @@
     utils = flake-utils.lib;
   in
     utils.eachDefaultSystem (system: let
-      compilerVersion = "8107";
+      compilerVersion = "ghc8107";
       pkgs = nixpkgs.legacyPackages.${system};
       hsPkgs = pkgs.haskell.packages.${compilerVersion}.override {
         overrides = hfinal: hprev: {
           pi-forall = hfinal.callCabal2nix "pi-forall" ./. {};
+          unbound-generics = hfinal.callPackage ./nix/deps/unbound-generics.nix {};
         };
       };
     in rec {
@@ -36,7 +37,6 @@
           src = ./.;
           hooks = {
             alejandra.enable = true;
-            fourmolu.enable = true;
             cabal-fmt.enable = true;
           };
         };

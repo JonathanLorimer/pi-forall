@@ -1,34 +1,40 @@
-cabal-Version: 2.2
-name: pi-forall
-version: 0.2
-license: BSD-3-Clause
-license-file: LICENSE
-copyright: (c) 2013-2022 University of Pennsylvania
-description: An implementation of a simple dependently typed language for OPLSS 2022
-author: Stephanie Weirich <sweirich@seas.upenn.edu>, based on code by Trellys Team <trellys@...>
-maintainer: Stephanie Weirich <sweirich@seas.upenn.edu>
-build-type: Simple
-tested-with: GHC == 8.10.7
-category: Compilers/Interpreters
-homepage: https://github.com/sweirich/pi-forall
-synopsis: Demo implementation of typechecker for dependently-typed language
+cabal-version: 2.2
+name:          pi-forall
+version:       0.2
+license:       BSD-3-Clause
+license-file:  LICENSE
+copyright:     (c) 2013-2022 University of Pennsylvania
+description:
+  An implementation of a simple dependently typed language for OPLSS 2022
+
+author:
+  Stephanie Weirich <sweirich@seas.upenn.edu>, based on code by Trellys Team <trellys@...>
+
+maintainer:    Stephanie Weirich <sweirich@seas.upenn.edu>
+build-type:    Simple
+tested-with:   GHC ==8.10.7
+category:      Compilers/Interpreters
+homepage:      https://github.com/sweirich/pi-forall
+synopsis:
+  Demo implementation of typechecker for dependently-typed language
 
 source-repository head
-  type: git
+  type:     git
   location: https://github.com/sweirich/pi-forall
 
 common shared-properties
-  default-language:
-    Haskell2010
+  default-language:   Haskell2010
   ghc-options:
-    -Wall -fno-warn-unused-matches -fno-warn-orphans -fno-warn-unused-top-binds -fno-warn-unused-imports
+    -Wall -fno-warn-unused-matches -fno-warn-orphans
+    -fno-warn-unused-top-binds -fno-warn-unused-imports
+
   default-extensions:
-    EmptyDataDecls
     DefaultSignatures
     DeriveAnyClass
     DeriveDataTypeable
     DeriveGeneric
     DerivingStrategies
+    EmptyDataDecls
     FlexibleContexts
     FlexibleInstances
     GADTs
@@ -45,27 +51,28 @@ common shared-properties
     TypeSynonymInstances
     UndecidableInstances
     ViewPatterns
+
   build-depends:
-    base >= 4 && < 5,
-    parsec >= 3.1.8 && < 3.2,
-    mtl >= 2.2.1,
-    pretty >= 1.0.1.0,
-    unbound-generics >= 0.2,
-    transformers,
-    array >= 0.3.0.2 && < 0.6,
-    containers,
-    directory,
-    filepath,
-    HUnit,
-    QuickCheck
-  if !impl(ghc >= 8.0)
-    build-depends: semigroups == 0.18.*
+    , array             >=0.3.0.2 && <0.6
+    , base              >=4       && <5
+    , containers
+    , directory
+    , filepath
+    , HUnit
+    , mtl               >=2.2.1
+    , parsec            ^>=3.1.8
+    , pretty            >=1.0.1.0
+    , QuickCheck
+    , semigroups        ^>=0.18
+    , transformers
+    , unbound-generics  >=0.4.1
 
-
-library pi-forall-full
-  import: shared-properties
-  hs-source-dirs: full/src
+-- Full
+library pi-forall-full-lib
+  import:          shared-properties
+  hs-source-dirs:  full/src
   exposed-modules:
+    Arbitrary
     Environment
     Equal
     LayoutToken
@@ -74,18 +81,112 @@ library pi-forall-full
     PrettyPrint
     Syntax
     TypeCheck
-    Arbitrary
 
 executable pi-forall-full
-  import: shared-properties
-  build-depends: pi-forall-full
+  import:         shared-properties
+  build-depends:  pi-forall-full-lib
   hs-source-dirs: full/app
-  main-is: Main.hs
+  main-is:        Main.hs
 
 test-suite test-pi-forall-full
-  import: shared-properties
-  build-depends: pi-forall-full
-    , QuickCheck >= 2.13.2
-  type: exitcode-stdio-1.0
+  import:         shared-properties
+  build-depends:
+    , pi-forall-full-lib
+    , QuickCheck          >=2.13.2
+
+  type:           exitcode-stdio-1.0
   hs-source-dirs: full/test
-  main-is: Main.hs
+  main-is:        Main.hs
+
+-- V1
+library pi-forall-lib-v1
+  import:          shared-properties
+  hs-source-dirs:  version1/src
+  exposed-modules:
+    Arbitrary
+    Environment
+    Equal
+    LayoutToken
+    Modules
+    Parser
+    PrettyPrint
+    Syntax
+    TypeCheck
+
+executable pi-forall-v1
+  import:         shared-properties
+  build-depends:  pi-forall-lib-v1
+  hs-source-dirs: version1/app
+  main-is:        Main.hs
+
+test-suite test-pi-forall-v1
+  import:         shared-properties
+  build-depends:
+    , pi-forall-lib-v2
+    , QuickCheck        >=2.13.2
+
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: version1/test
+  main-is:        Main.hs
+
+-- V2
+library pi-forall-lib-v2
+  import:          shared-properties
+  hs-source-dirs:  version2/src
+  exposed-modules:
+    Arbitrary
+    Environment
+    Equal
+    LayoutToken
+    Modules
+    Parser
+    PrettyPrint
+    Syntax
+    TypeCheck
+
+executable pi-forall-v2
+  import:         shared-properties
+  build-depends:  pi-forall-lib-v2
+  hs-source-dirs: version2/app
+  main-is:        Main.hs
+
+test-suite test-pi-forall-v2
+  import:         shared-properties
+  build-depends:
+    , pi-forall-lib-v2
+    , QuickCheck        >=2.13.2
+
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: version2/test
+  main-is:        Main.hs
+
+-- V3
+library pi-forall-lib-v3
+  import:          shared-properties
+  hs-source-dirs:  version3/src
+  exposed-modules:
+    Arbitrary
+    Environment
+    Equal
+    LayoutToken
+    Modules
+    Parser
+    PrettyPrint
+    Syntax
+    TypeCheck
+
+executable pi-forall-v3
+  import:         shared-properties
+  build-depends:  pi-forall-lib-v3
+  hs-source-dirs: version3/app
+  main-is:        Main.hs
+
+test-suite test-pi-forall-v3
+  import:         shared-properties
+  build-depends:
+    , pi-forall-lib-v3
+    , QuickCheck        >=2.13.2
+
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: version3/test
+  main-is:        Main.hs
